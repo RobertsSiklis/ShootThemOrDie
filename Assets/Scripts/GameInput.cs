@@ -6,7 +6,6 @@ using UnityEngine;
 public class GameInput : MonoBehaviour
 {
     static public GameInput Instance { get; private set; }
-    static public event EventHandler OnShoot;
 
     private void Awake() {
         if (Instance == null) {
@@ -14,10 +13,6 @@ public class GameInput : MonoBehaviour
         } else {
             Debug.LogError("More than one GameInput");
         }
-    }
-    
-    private void Update() {
-        OnShootPressed();
     }
 
     public Vector2 GetMovementVectorNormalized() {
@@ -40,12 +35,6 @@ public class GameInput : MonoBehaviour
         }
 
         return inputVector.normalized;
-    }
-
-    private void OnShootPressed() {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            OnShoot?.Invoke(this, EventArgs.Empty );
-        }
     }
 
 }
