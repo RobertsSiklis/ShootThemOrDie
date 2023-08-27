@@ -6,12 +6,7 @@ using UnityEngine;
 public class GameInput : MonoBehaviour
 {
     static public GameInput Instance { get; private set; }
-    static public event EventHandler<OnShootEventArgs> OnShoot;
-
-    public class OnShootEventArgs : EventArgs {
-        public Vector3 ShotPosition;
-    }
-
+    static public event EventHandler OnShoot;
 
     private void Awake() {
         if (Instance == null) {
@@ -49,13 +44,8 @@ public class GameInput : MonoBehaviour
 
     private void OnShootPressed() {
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            OnShoot?.Invoke(this, new OnShootEventArgs {
-                ShotPosition = GetWorldMousePosition()
-            }); ;
+            OnShoot?.Invoke(this, EventArgs.Empty );
         }
     }
 
-    private Vector3 GetWorldMousePosition() {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
 }

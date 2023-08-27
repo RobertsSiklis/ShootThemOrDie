@@ -15,4 +15,5 @@ public class GameHandler : MonoBehaviour
         Instantiate(bullet, PlayerHandler.Instance.transform.position, Quaternion.identity);
     }
 
+
 }
