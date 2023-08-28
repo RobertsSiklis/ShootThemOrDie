@@ -7,10 +7,14 @@ using UnityEngine;
 public class PlayerHandler : MonoBehaviour {
 
     static public event EventHandler<OnCollisionWithEnemyEventArgs> OnColissionWithEnemy;
+
     public class OnCollisionWithEnemyEventArgs : EventArgs {
-        public Vector2 collidedEnemyPosition;
+        public Enemy
+            enemy;
     }
     static public PlayerHandler Instance { get; private set; }
+
+    private RaycastHit2D rangeCollider;
 
     private void Awake() {
         if (Instance == null) {
@@ -21,19 +25,31 @@ public class PlayerHandler : MonoBehaviour {
     }
 
     private void Update() {
-        DrawAutoAttackRange();
+        rangeCollider = DrawAutoAttackRange();
+        CheckForEnemyInAttackRange();
+        SetEnemy(CheckForEnemyInAttackRange());
     }
 
-    private void DrawAutoAttackRange() {
+    private RaycastHit2D DrawAutoAttackRange() {
         float autoAttackRange = 5f;
-        RaycastHit2D ray = Physics2D.CircleCast(transform.position, autoAttackRange, Vector2.zero);
-        if (ray.collider != null) {
-            Vector2 enemyPosition = ray.collider.transform.position;
-            OnColissionWithEnemy?.Invoke(this, new OnCollisionWithEnemyEventArgs() {
-                collidedEnemyPosition = enemyPosition
+        return Physics2D.CircleCast(transform.position, autoAttackRange, Vector2.zero);
+    }
+
+    private Enemy CheckForEnemyInAttackRange() {
+        if (rangeCollider.collider != null) {
+            return rangeCollider.collider.GetComponent<Enemy>();
+        }
+        return null;
+    }
+
+    private void SetEnemy(Enemy enemy) {
+        if (enemy != null) {
+            OnColissionWithEnemy?.Invoke(this, new OnCollisionWithEnemyEventArgs {
+                enemy = enemy
             });
         }
     }
+
     private void OnDrawGizmos() {
         Gizmos.DrawWireSphere(transform.position, 5f);
     }
