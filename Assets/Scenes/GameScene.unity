@@ -780,8 +780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1cb4078ec593534eb386cc9c077ec33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 3533831156431580522, guid: a4f7689d485215f49b356866338f6256, type: 3}
-  spawnTime: 1
+  bulletPrefab: {fileID: 3533831156431580522, guid: a4f7689d485215f49b356866338f6256, type: 3}
 --- !u!4 &1645186084
 Transform:
   m_ObjectHideFlags: 0
@@ -935,6 +934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc698fc6821a91640a6267770f3d0dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnTimer: 1
 --- !u!1 &1919029450
 GameObject:
   m_ObjectHideFlags: 0

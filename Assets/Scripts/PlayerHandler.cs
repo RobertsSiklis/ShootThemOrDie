@@ -14,7 +14,10 @@ public class PlayerHandler : MonoBehaviour {
     }
     static public PlayerHandler Instance { get; private set; }
 
+    [SerializeField] private float spawnTimer = 1f;
+    private float timer;
     private RaycastHit2D rangeCollider;
+    
 
     private void Awake() {
         if (Instance == null) {
@@ -24,10 +27,17 @@ public class PlayerHandler : MonoBehaviour {
         }
     }
 
+    private void Start() {
+        timer = spawnTimer;
+    }
+
     private void Update() {
+        timer += Time.deltaTime;
         rangeCollider = DrawAutoAttackRange();
-        CheckForEnemyInAttackRange();
-        SetEnemy(CheckForEnemyInAttackRange());
+        if (timer >= spawnTimer) {
+            timer = 0f;
+            SetEnemy(CheckForEnemyInAttackRange());
+        }  
     }
 
     private RaycastHit2D DrawAutoAttackRange() {
