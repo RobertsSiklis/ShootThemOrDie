@@ -10,37 +10,26 @@ public class Bullet : MonoBehaviour
 
     public class OnBulletCollisionEventArgs : EventArgs {
         public GameObject enemy;
+        public GameObject bullet;
     }
 
     private Vector2 targetDirection;
-    private Enemy myenemy;
-
-    private void Start() {
-        Enemy.OnEnemyDestroyed += EnemyHandler_OnEnemyDestroyed;
-    }
-
-    private void EnemyHandler_OnEnemyDestroyed(object sender, EventArgs e) {
-        if (this != null) {
-            Destroy(gameObject);
-        }
-        
-    }
+    private Enemy enemy;
+    private RaycastHit2D bulletRay;
 
     private void Update() {
-        Debug.Log(targetDirection + " " + gameObject.name);
-        SetEnemyPosition();
-        SetDirectionFromBulletPositionToEnemyPosition(transform);
-        NormalizeTargetDirection();
-        OnCollisionDestroy();
-        
+        if (enemy != null) {
+            Debug.Log(targetDirection);
+            SetBulltetTargetFromEnemyPosition();
+            SetDirectionFromBulletPositionToEnemyPosition(transform);
+            NormalizeTargetDirection();
+        }
+        DrawBulletCollisionRay();
+        OnBulletCollisionDestroy();
     }
 
-    public void SetEnemy(Enemy enemy) {
-        myenemy = enemy;
-    }
-
-    private void SetEnemyPosition() {
-        targetDirection = myenemy.GetEnemyPosition();
+    private void SetBulltetTargetFromEnemyPosition() {  
+        targetDirection = enemy.GetEnemyPosition();
     }
 
     private void SetDirectionFromBulletPositionToEnemyPosition(Transform transform) {
@@ -51,22 +40,25 @@ public class Bullet : MonoBehaviour
         targetDirection = targetDirection.normalized;
     }
 
-    private void OnCollisionDestroy() {
-        if (DrawBulletCollisionRay()) {
+    private void OnBulletCollisionDestroy() {
+        if (bulletRay.collider != null) {
             OnBulletCollision?.Invoke(this, new OnBulletCollisionEventArgs() {
-                enemy = DrawBulletCollisionRay().gameObject
-            });
-            Destroy(gameObject);      
+                enemy = bulletRay.collider.gameObject,
+                bullet = gameObject
+            });  
         }
     }
 
     private GameObject DrawBulletCollisionRay() {
         float rayDistance = 0.25f;
-        RaycastHit2D ray = Physics2D.Raycast(transform.position, targetDirection, rayDistance);
-        if (ray.collider != null) {
-            return ray.collider.gameObject;
+        bulletRay = Physics2D.Raycast(transform.position, targetDirection, rayDistance);
+        if (bulletRay.collider != null) {
+            return bulletRay.collider.gameObject;
         }
         return null;
+    }
+    public void SetEnemy(Enemy enemy) {
+        this.enemy = enemy;
     }
 
     public Vector2 GetTargetDirection() {

@@ -13,9 +13,9 @@ public class BulletMovement : MonoBehaviour
     }
 
     private void Update() {
-        targetDirection = bullet.GetTargetDirection();
-        RotateBulletToTheTargetDirection();
-        MoveBullet();
+            targetDirection = bullet.GetTargetDirection();
+            RotateBulletToTheTargetDirection();
+            MoveBullet();
     }
 
     private void RotateBulletToTheTargetDirection() {
